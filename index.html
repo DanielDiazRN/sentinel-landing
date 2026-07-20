@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sentinel · Scam protection for your parents' iPhone</title>
-<meta name="description" content="Sentinel catches scam texts on your parent's iPhone and explains them in plain words, entirely on the device. Coming with iOS 27, fall 2026.">
+<title>Sentinel · Scam protection for your loved one's iPhone</title>
+<meta name="description" content="Sentinel catches scam texts on your loved one's iPhone and explains them in plain words, entirely on the device. Coming with iOS 27, fall 2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -56,6 +56,7 @@
     font-weight: 600; font-size: clamp(40px, 5.6vw, 64px);
     line-height: 1.06; letter-spacing: -0.015em; text-wrap: balance;
   }
+  .rot { color: var(--teal); }
   .hero p.sub { margin-top: 24px; font-size: 20px; max-width: 30em; color: var(--mute); }
   .hero p.sub b { color: var(--ink); }
   .cta-row { margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
@@ -95,6 +96,19 @@
     display: block; margin-top: 12px; background: var(--teal); color: var(--paper);
     text-align: center; border-radius: 9px; padding: 10px; font-weight: 700; font-size: 14.5px;
   }
+
+  /* scam carousel */
+  .slides { display: grid; }
+  .slide { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity 0.45s ease; }
+  .slide.active { opacity: 1; visibility: visible; }
+  @media (prefers-reduced-motion: reduce) { .slide { transition: none; } }
+  .dots { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+  .dots button {
+    width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--teal);
+    background: transparent; padding: 0; cursor: pointer;
+  }
+  .dots button.on { background: var(--teal); }
+  .dots button:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 3px; }
 
   /* statement band */
   .band { background: var(--teal-deep); color: #EDF3EF; padding: 72px 0; }
@@ -200,27 +214,86 @@
 <main>
   <div class="shell hero">
     <div>
-      <p class="eyebrow">Scam protection for your parents' iPhone</p>
-      <h1>Someone is texting your dad right now.</h1>
-      <p class="sub">About a package fee, or a bank account that is suddenly locked. <b>Sentinel catches the scam on his phone and explains it in plain words</b>, before he replies, before anyone gets hurt.</p>
+      <p class="eyebrow">Scam protection for your loved one's iPhone</p>
+      <h1>Someone is texting your <span class="rot" id="rot-word">dad</span> right now.</h1>
+      <p class="sub">About a package fee, or a bank account that is suddenly locked. <b>Sentinel catches the scam on their phone and explains it in plain words</b>, before they reply, before anyone gets hurt.</p>
       <div class="cta-row">
         <a class="btn solid" href="#price">Coming this fall</a>
         <a class="btn line" href="#how">See how it works</a>
       </div>
       <p class="hero-note">Built for iOS 27. Beta opens in September.</p>
     </div>
-    <div class="phone" role="img" aria-label="An iPhone showing a scam text and Sentinel's warning underneath it">
+    <div class="phone" role="group" aria-label="Examples of scam texts Sentinel catches, with its warning under each one">
       <div class="screen">
         <div class="clock">9:41</div>
-        <div class="msg">
-          <div class="from">+1 (830) 555-0119</div>
-          Your package is on hold. Pay the $1.99 redelivery fee within 24h: usps-track.xyz/re...
+        <div class="slides" id="scam-slides">
+          <div class="slide active">
+            <div class="msg">
+              <div class="from">+1 (830) 555-0119</div>
+              Your package is on hold. Pay the $1.99 redelivery fee within 24h: usps-track.xyz/re...
+            </div>
+            <div class="warncard">
+              <span class="tag">Very likely a scam</span>
+              <h3>Fake delivery fee</h3>
+              <p>Real carriers never text a payment link. This message wants your card number, not $1.99.</p>
+              <span class="act">Help me block this sender</span>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="msg">
+              <div class="from">1-844-555-0173</div>
+              IRS Notice: Your 2025 refund of $1,432 is on hold. Verify your identity within 48 hours: irs-refund-portal.net
+            </div>
+            <div class="warncard">
+              <span class="tag">Very likely a scam</span>
+              <h3>Fake IRS alert</h3>
+              <p>The IRS never texts about refunds. Real tax business arrives by mail, on paper.</p>
+              <span class="act">Help me block this sender</span>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="msg">
+              <div class="from">CHASE · 24601</div>
+              Chase Security: Your card is locked after unusual activity. Call 888-555-0142 immediately to restore access.
+            </div>
+            <div class="warncard">
+              <span class="tag">Very likely a scam</span>
+              <h3>Spoofed bank alert</h3>
+              <p>Sender names and numbers can be faked to look like your bank. If you're worried, call the number on the back of your card.</p>
+              <span class="act">Help me block this sender</span>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="msg">
+              <div class="from">appleid-secure.net</div>
+              Your Apple ID password was just reset. If this wasn't you, confirm your identity now: appleid-secure.net/verify
+            </div>
+            <div class="warncard">
+              <span class="tag">Very likely a scam</span>
+              <h3>Fake password reset</h3>
+              <p>Real reset notices never ask you to click a link from a text. Delete it; your account is fine.</p>
+              <span class="act">Help me block this sender</span>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="msg">
+              <div class="from">Unknown · new number</div>
+              Grandma, it's me. I broke my phone, this is my new number. I'm in real trouble and need $200 in gift cards. Please don't tell mom.
+            </div>
+            <div class="warncard">
+              <span class="tag">Very likely a scam</span>
+              <h3>Someone pretending to be family</h3>
+              <p>Hang up on panic. Call your grandchild's real number. A true emergency survives a five-minute check.</p>
+              <span class="act">Help me block this sender</span>
+            </div>
+          </div>
         </div>
-        <div class="warncard">
-          <span class="tag">Very likely a scam</span>
-          <h3>Fake delivery fee</h3>
-          <p>Real carriers never text a payment link. This message wants your card number, not $1.99.</p>
-          <span class="act">Help me block this sender</span>
+        <div class="dots" id="scam-dots">
+          <button class="on" aria-label="Show scam example 1"></button>
+          <button aria-label="Show scam example 2"></button>
+          <button aria-label="Show scam example 3"></button>
+          <button aria-label="Show scam example 4"></button>
+          <button aria-label="Show scam example 5"></button>
         </div>
       </div>
     </div>
@@ -320,7 +393,7 @@
     </details>
     <details>
       <summary>What about phone calls and email?</summary>
-      <p>Texts and shared screenshots come first, and a screenshot covers most scam email. Live call screening is on the roadmap once we can do it with the same privacy guarantees.</p>
+      <p>Texts and shared screenshots come first, and a screenshot covers most scam email and voicemail transcripts too. On calls, honesty matters: iOS does not let any app listen in on a live conversation, so nobody can truthfully sell live call protection. Sentinel ships what is real today. Known scam numbers get blocked or labeled before the phone ever rings, and setup helps your family agree on a private code word, which defeats the impostor call no matter how convincing the voice sounds. When Apple opens live screening with the same privacy guarantees, we will adopt it.</p>
     </details>
     <details>
       <summary>When can we get it?</summary>
@@ -336,5 +409,45 @@
   </div>
 </footer>
 
+<script>
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var words = ["dad", "mom", "grandma", "grandpa", "great-aunt", "great-uncle"];
+  var rot = document.getElementById("rot-word");
+  var wi = 0;
+  if (rot && !reduce) {
+    rot.style.transition = "opacity 0.3s ease";
+    setInterval(function () {
+      rot.style.opacity = "0";
+      setTimeout(function () {
+        wi = (wi + 1) % words.length;
+        rot.textContent = words[wi];
+        rot.style.opacity = "1";
+      }, 320);
+    }, 2600);
+  }
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll("#scam-slides .slide"));
+  var dots = Array.prototype.slice.call(document.querySelectorAll("#scam-dots button"));
+  var si = 0;
+  var timer = null;
+
+  function show(n) {
+    si = (n + slides.length) % slides.length;
+    slides.forEach(function (s, i) { s.classList.toggle("active", i === si); });
+    dots.forEach(function (d, i) { d.classList.toggle("on", i === si); });
+  }
+  function arm() {
+    if (reduce) return;
+    if (timer) clearInterval(timer);
+    timer = setInterval(function () { show(si + 1); }, 5200);
+  }
+  dots.forEach(function (d, i) {
+    d.addEventListener("click", function () { show(i); arm(); });
+  });
+  if (slides.length) arm();
+})();
+</script>
 </body>
 </html>
