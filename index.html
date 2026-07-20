@@ -327,14 +327,14 @@
       <div class="step">
         <div class="no">04</div>
         <h3>It tells the family</h3>
-        <p>If your parent opts in, you get a short digest: <b>"Dad blocked a scam today. No action needed."</b> You see what kind of scam it was. You never see his messages, and he knows exactly what you can see, because we showed him during setup.</p>
+        <p>If your loved one opts in, you get a short digest: <b>"Dad blocked a scam today. No action needed."</b> You see what kind of scam it was. You never see their messages, and they know exactly what you can see, because we showed them during setup.</p>
       </div>
     </div>
   </section>
 
   <section class="ledger shell" id="privacy">
     <h2 class="kicker">What the family sees</h2>
-    <p class="lead">This exact list is shown to your parent, on their phone, before anything is shared. They can turn it off any time and stay fully protected.</p>
+    <p class="lead">This exact list is shown to your loved one, on their phone, before anything is shared. They can turn it off any time and stay fully protected.</p>
     <div class="ledger-wrap">
       <div class="lrow"><span>A scam was blocked</span><span class="mark yes">Shared</span></div>
       <div class="lrow"><span>What kind of scam it was</span><span class="mark yes">Shared</span></div>
@@ -364,7 +364,7 @@
         <div class="amount">$6.99<small>/month</small></div>
         <p style="color:var(--mute)">or $59 a year. First 30 days free.</p>
         <ul>
-          <li>Protects up to 4 parents or grandparents</li>
+          <li>Protects up to 4 loved ones</li>
           <li>Digest and alerts for the family</li>
           <li>"Ask Sentinel" questions on any suspicious message</li>
           <li>Works on iPhone 12 and later, with iOS 27</li>
@@ -372,7 +372,7 @@
       </div>
       <div class="promise">
         <p class="pt">Our one rule about money.</p>
-        <p style="margin-top:8px">If you cancel, the warnings on your parent's phone keep working. Every safety feature stays on, forever, for free. We will never switch off protection to make a sale, and your parent will never see a price or an upgrade screen. The paid plan buys the family features; it does not buy their safety.</p>
+        <p style="margin-top:8px">If you cancel, the warnings on your loved one's phone keep working. Every safety feature stays on, forever, for free. We will never switch off protection to make a sale, and your loved one will never see a price or an upgrade screen. The paid plan buys the family features; it does not buy their safety.</p>
       </div>
     </div>
   </section>
@@ -380,15 +380,15 @@
   <section class="faq shell" id="faq">
     <h2 class="kicker">Fair questions</h2>
     <details>
-      <summary>Does Sentinel read my parent's messages?</summary>
-      <p>Screening happens inside iOS, on their phone, using Apple's Trust Insights framework. Nothing is uploaded. When Sentinel writes an explanation, that happens on the device too. The single exception: if your parent catches a scam we missed, they can choose to send us that one message to make Sentinel better. It asks every time, in large print.</p>
+      <summary>Does Sentinel read my loved one's messages?</summary>
+      <p>Screening happens inside iOS, on their phone, using Apple's Trust Insights framework. Nothing is uploaded. When Sentinel writes an explanation, that happens on the device too. The single exception: if your loved one catches a scam we missed, they can choose to send us that one message to make Sentinel better. It asks every time, in large print.</p>
     </details>
     <details>
       <summary>Which iPhones does it work on?</summary>
       <p>Any iPhone that runs iOS 27, which means iPhone 12 and newer. Recent models write custom explanations on the device. Older models use our pre-written playbooks for each scam type. Detection quality is the same on both.</p>
     </details>
     <details>
-      <summary>What does my parent have to do?</summary>
+      <summary>What does my loved one have to do?</summary>
       <p>After the five-minute setup, nothing. Sentinel includes a practice run so they see what a warning looks like before a real one arrives. When one does, the card tells them the one safe thing to do next.</p>
     </details>
     <details>
@@ -415,38 +415,42 @@
 
   var words = ["dad", "mom", "grandma", "grandpa", "great-aunt", "great-uncle"];
   var rot = document.getElementById("rot-word");
+  var slides = Array.prototype.slice.call(document.querySelectorAll("#scam-slides .slide"));
+  var dots = Array.prototype.slice.call(document.querySelectorAll("#scam-dots button"));
   var wi = 0;
-  if (rot && !reduce) {
-    rot.style.transition = "opacity 0.3s ease";
-    setInterval(function () {
+  var si = 0;
+  var timer = null;
+
+  if (rot) rot.style.transition = "opacity 0.3s ease";
+
+  function showSlide(n) {
+    si = (n + slides.length) % slides.length;
+    slides.forEach(function (s, i) { s.classList.toggle("active", i === si); });
+    dots.forEach(function (d, i) { d.classList.toggle("on", i === si); });
+  }
+
+  function tick() {
+    if (rot) {
       rot.style.opacity = "0";
       setTimeout(function () {
         wi = (wi + 1) % words.length;
         rot.textContent = words[wi];
         rot.style.opacity = "1";
       }, 320);
-    }, 2600);
+    }
+    showSlide(si + 1);
   }
 
-  var slides = Array.prototype.slice.call(document.querySelectorAll("#scam-slides .slide"));
-  var dots = Array.prototype.slice.call(document.querySelectorAll("#scam-dots button"));
-  var si = 0;
-  var timer = null;
-
-  function show(n) {
-    si = (n + slides.length) % slides.length;
-    slides.forEach(function (s, i) { s.classList.toggle("active", i === si); });
-    dots.forEach(function (d, i) { d.classList.toggle("on", i === si); });
-  }
   function arm() {
     if (reduce) return;
     if (timer) clearInterval(timer);
-    timer = setInterval(function () { show(si + 1); }, 5200);
+    timer = setInterval(tick, 5200);
   }
+
   dots.forEach(function (d, i) {
-    d.addEventListener("click", function () { show(i); arm(); });
+    d.addEventListener("click", function () { showSlide(i); arm(); });
   });
-  if (slides.length) arm();
+  if (slides.length || rot) arm();
 })();
 </script>
 </body>
